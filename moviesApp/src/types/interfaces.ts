@@ -25,6 +25,10 @@ export interface BaseMovieProps {
     genres:{
         id:number;
         name: string;
+    }[],
+    productioncountries :{
+        id:number;
+        countryname: string
     }[]
   }
 

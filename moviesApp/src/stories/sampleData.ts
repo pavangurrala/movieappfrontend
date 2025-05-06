@@ -26,6 +26,16 @@ export default {
         name: "Action",
       },
     ],
+    productioncountries :[
+        {
+            id: 224,
+            countryname: "France"
+        },
+        {
+            id: 245,
+            countryname: "Lithuania"
+        },
+    ],
     homepage:
       "https://www.starwars.com/films/star-wars-episode-viii-the-last-jedi",
     id: 181808,
