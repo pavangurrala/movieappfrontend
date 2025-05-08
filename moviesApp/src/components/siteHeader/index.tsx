@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState, MouseEvent} from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -11,7 +11,8 @@ import Menu from "@mui/material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {useAuth } from "../../contexts/authContext"
 const styles = {
     title: {
       flexGrow: 1,
@@ -26,17 +27,25 @@ const SiteHeader: React.FC = () => {
   const open = Boolean(anchorEl);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const {username, setUsername, setEmailId, logout} = useAuth();
+  //const { username, setUsername, setEmailId } = useContext(AuthProvider);
+  const isLoggedIn = !!username;
 
+  const handleLogout = () => {
+    setUsername(null);
+    setEmailId(null);
+    logout();
+    navigate("/authPage");
+  };
   const menuOptions = [
     { label: "Home", path: "/" },
     { label: "Upcoming", path: "/movies/upcoming" },
     { label: "Favorites", path: "/movies/favourites" },
-    { label: "Option 3", path: "/" },
-    { label: "Option 4", path: "/" },
   ];
 
   const handleMenuSelect = (pageURL: string) => {
     navigate(pageURL);
+    setAnchorEl(null);
   };
 
   const handleMenu = (event: MouseEvent<HTMLButtonElement>) => {
@@ -88,6 +97,11 @@ const SiteHeader: React.FC = () => {
                     {opt.label}
                   </MenuItem>
                 ))}
+                {isLoggedIn ? (
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                ) : (
+                  <MenuItem onClick={() => navigate("/authPage")}>Sign In</MenuItem>
+                )}
               </Menu>
             </>
           ) : (
@@ -101,6 +115,21 @@ const SiteHeader: React.FC = () => {
                   {opt.label}
                 </Button>
               ))}
+              {isLoggedIn ? (
+                <>
+                  <Typography variant="subtitle1" sx={{ mx: 2 }}>
+                    <AccountCircleIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                    {username}
+                  </Typography>
+                  <Button color="inherit" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Button color="inherit" onClick={() => navigate("/authPage")}>
+                  Sign In
+                </Button>
+              )}
             </>
           )}
         </Toolbar>

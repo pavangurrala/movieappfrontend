@@ -41,7 +41,7 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
         setRating(Number(event.target.value));
       };
       const handleSnackClose = () => {
-        setOpen(false);
+        setOpen(true);
         navigate("/movies/favourites");
       };
       const onSubmit: SubmitHandler<Review> = (review) => {
