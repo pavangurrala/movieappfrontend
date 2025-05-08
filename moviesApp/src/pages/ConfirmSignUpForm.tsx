@@ -1,28 +1,54 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 
+const poolData = {
+  UserPoolId: "eu-west-1_gG71aMxyI", // Replace with your User Pool ID
+  ClientId: "6kqjb8a941k4reptoambjhjc4s", // Replace with your App Client ID
+};
+
+const userPool = new CognitoUserPool(poolData);
 const ConfirmSignUpForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [code, setCode] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleConfirm = async () => {
-    try {
-      const response = await fetch("https://j5m40k2ww1.execute-api.eu-west-1.amazonaws.com/prod/auth/confirm_signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, code }),
-      });
+  const handleConfirm = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    const userData = {
+      Username: username,
+      Pool: userPool,
+    };
+    const cognitoUser = new CognitoUser(userData);
+    cognitoUser.confirmRegistration(code, true, (err, result) => {
+      if (err) {
+        console.error(err);
+        setError(err.message || "Confirmation failed.");
+        return;
+      }
 
-      if (!response.ok) throw new Error("Confirmation failed");
-
+      console.log("Confirmation result:", result);
       alert("Signup confirmed! Please sign in.");
       navigate("/authPage");
-    } catch (error) {
-      console.error(error);
-      alert("Error confirming sign up");
-    }
+    });
+  //   try {
+  //     const response = await fetch("https://j5m40k2ww1.execute-api.eu-west-1.amazonaws.com/prod/auth/confirm_signup", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ username, code }),
+  //     });
+
+  //     if (!response.ok) throw new Error("Confirmation failed");
+
+  //     alert("Signup confirmed! Please sign in.");
+  //     navigate("/authPage");
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Error confirming sign up");
+  //   }
   };
 
   return (
@@ -30,6 +56,11 @@ const ConfirmSignUpForm: React.FC = () => {
       <Typography variant="h5" align="center">Confirm Your Signup</Typography>
       <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
       <TextField label="Confirmation Code" value={code} onChange={(e) => setCode(e.target.value)} fullWidth />
+      {error && (
+        <Typography color="error" variant="body2">
+          {error}
+        </Typography>
+      )}  
       <Button variant="contained" color="primary" onClick={handleConfirm}>
         Confirm
       </Button>

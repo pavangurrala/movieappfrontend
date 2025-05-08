@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import { CognitoUserPool, CognitoUserAttribute  } from "amazon-cognito-identity-js";
 import {useAuth} from "../../contexts/authContext";
+const poolData = {
+    UserPoolId: "eu-west-1_gG71aMxyI", // 🔁 Replace with your Cognito User Pool ID
+    ClientId: "6kqjb8a941k4reptoambjhjc4s",      // 🔁 Replace with your App Client ID
+  };
+  const userPool = new CognitoUserPool(poolData);
+
+  
 const SignUpPage = () => {
   const {setUsername, setEmailId} = useAuth();  
   const [email, setEmailInput] = useState("");
@@ -10,27 +18,35 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const attributeList = [
+    new CognitoUserAttribute({
+      Name: "email",
+      Value: email,
+    }),
+  ];
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    try {
-      const response = await axios.post(
-        "https://hrgy437sgg.execute-api.eu-west-1.amazonaws.com/prod/auth/signup",
-        {
-          email,
-          username, // SEND username
-          password,
+    userPool.signUp(
+        username,
+        password,
+        attributeList,
+        [],
+        (err, result) => {
+          if (err) {
+            setError(err.message || "Sign-up failed.");
+            return;
+          }
+  
+          // Save user info to context
+          setUsername(username);
+          setEmailId(email);
+  
+          console.log("Sign-up success:", result);
+          navigate("/confirm-signup"); // Go to confirmation page
         }
       );
-      setUsername(username);
-      setEmailId(email);
-      console.log("Sign-up successful:", response.data);
-      navigate("/confirm-signup"); // navigate to home on success
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Sign-up failed.");
-    }
+    
   };
 
   return (
