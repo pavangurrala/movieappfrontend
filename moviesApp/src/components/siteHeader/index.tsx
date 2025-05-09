@@ -42,6 +42,7 @@ const SiteHeader: React.FC = () => {
     { label: "Upcoming", path: "/movies/upcoming" },
     { label: "Favorites", path: "/movies/favourites" },
     { label: "Popular Movies", path: "/movies/popular" },
+    { label: "Popular Actors", path: "/person/popular" },
   ];
 
   const handleMenuSelect = (pageURL: string) => {

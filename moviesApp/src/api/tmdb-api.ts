@@ -106,4 +106,34 @@ export const getMovies = () => {
     if (!response.ok) throw new Error(`Failed to fetch similar TV series.`);
     return response.json();
   };
-  
+  export const getPopularMovieStars = (page:number =1) => {
+    return fetch(
+      `https://api.themoviedb.org/3/person/popular?api_key=${import.meta.env.VITE_TMDB_KEY}&page=${page}`
+    ).then((response)=>{
+        if(!response.ok){
+            throw new Error(`Unable to fetch movies. Response status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .catch((error) => {
+        throw error
+      });
+  };
+
+  export const getActorDetails = async(id:number) =>{
+    const response = await fetch(
+      `https://api.themoviedb.org/3/person/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+    );
+    if (!response.ok) throw new Error(`Failed to fetch actor details movies.`);
+    return response.json();
+  }
+
+  export const getActorCredits = async(id:number) =>{
+    const response = await fetch(
+      `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+    );
+    console.log(response)
+    if (!response.ok) throw new Error(`Failed to fetch actor details movies.`);
+    return response.json();
+  }
+

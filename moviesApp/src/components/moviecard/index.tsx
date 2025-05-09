@@ -27,6 +27,7 @@ const styles = {
     movie: BaseMovieProps;
     action: (m: BaseMovieProps) => React.ReactNode;
   } // 
+  debugger
   const MovieCard: React.FC<MovieCardProps> = ({movie, action}) => {
     const { favourites} = useContext(MoviesContext);//NEW
     const isFavourite = favourites.find((id) => id === movie.id)? true : false;//NEW

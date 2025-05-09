@@ -72,9 +72,9 @@ const TemplateMoviePage: React.FC<TemplateMoviePageProps> = ({movie, children}) 
 
             <Grid container spacing={5} style={{ padding: "15px" }}>
                 <Grid item xs={3}>
-                    <div style={{ position: "relative", overflow: "visible", zIndex: 1 }}>
+                    <div style={{ position: "relative", zIndex: 1 }}>
                     <Slider {...sliderProps}>
-                        {images.map((image: MovieImage)=>(
+                        {images.slice(0,8).map((image: MovieImage)=>(
                             <div key = {image.file_path}>
                                 <img 
                                 src={`https://image.tmdb.org/t/p/w500/${image.file_path}`}
