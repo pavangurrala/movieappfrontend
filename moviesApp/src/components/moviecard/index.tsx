@@ -69,7 +69,7 @@ const styles = {
           <Grid item xs={6}>
             <Typography variant="h6" component="p">
               <StarRateIcon fontSize="small" />
-              {"  "} {movie.vote_average}{" "}
+              {"  "} {movie.vote_average }{" "}
             </Typography>
           </Grid>
         </Grid>

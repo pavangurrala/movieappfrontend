@@ -65,7 +65,7 @@ export const getMovies = () => {
   };
   export const getUpcomingMovies = () => {
     return fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}`
     ).then((response)=>{
         if(!response.ok){
             throw new Error(`Unable to fetch movies. Response status: ${response.status}`);
@@ -77,3 +77,33 @@ export const getMovies = () => {
       });
       
   };
+
+  export const getPopularMovies = () => {
+    return fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_KEY}`
+    ).then((response)=>{
+        if(!response.ok){
+            throw new Error(`Unable to fetch movies. Response status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .catch((error) => {
+        throw error
+      });
+      
+  };
+  export const getSimilarMovies = async (id: string) => {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+    );
+    if (!response.ok) throw new Error(`Failed to fetch similar movies.`);
+    return response.json();
+  };
+  export const getSimilarTvSeries = async (id: string) => {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/tv/${id}/similar?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+    );
+    if (!response.ok) throw new Error(`Failed to fetch similar TV series.`);
+    return response.json();
+  };
+  

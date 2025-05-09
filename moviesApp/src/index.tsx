@@ -14,7 +14,10 @@ import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
 import AuthenticationPage from './pages/authPage'
 import ConfirmSignUpPage from './pages/ConfirmSignUpForm'
+import PopularMoviesPage from "./pages/popularMoviesPage";
 import { AuthProvider } from "./contexts/authContext";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -38,6 +41,7 @@ const App = () => {
                     <Route path="/movies/:id" element={<MoviePage />} />
                     <Route path="/movies/favourites" element={<FavouriteMoviesPage />} />
                     <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
+                    <Route path="/movies/popular" element={<PopularMoviesPage />} />
                     <Route path="/reviews/:id" element={<MovieReviewPage/>} />
                     <Route path="/reviews/form" element={<AddMovieReviewPage/>} />
                     <Route path="*" element={<Navigate to="/" />} />

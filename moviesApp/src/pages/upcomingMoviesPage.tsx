@@ -1,71 +1,14 @@
-import React from "react";
-import PageTemplate from '../components/templateMovieListPage';
-import { getUpcomingMovies } from "../api/tmdb-api";
-import AddToFavouritesIcon from '../components/cardIcons/addToFavoutires'
-import useFiltering from "../hooks/useFiltering";
-import MovieFilterUI, {
-  titleFilter,
-  genreFilter,
-} from "../components/movieFilterUI";
-import { DiscoverMovies } from "../types/interfaces";
+import React, { useState, useEffect } from "react";
+import PageTemplate from "../components/templateMovieListPage";
 import { BaseMovieProps } from "../types/interfaces";
-import { useQuery } from "react-query";
-import Spinner from "../components/spinner";
-
-const titleFiltering = {
-    name: "title",
-    value: "",
-    condition: titleFilter,
-  };
-  const genreFiltering = {
-    name: "genre",
-    value: "0",
-    condition: genreFilter,
-  };
+import { getUpcomingMovies } from "../api/tmdb-api";
 const UpcomingMoviesPage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>("discover", getUpcomingMovies);
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(
-    [titleFiltering, genreFiltering]
-  );
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (isError) {
-    return <h1>{error.message}</h1>;
-  }
-  const changeFilterValues = (type: string, value: string) => {
-    const changedFilter = { name: type, value: value };
-    const updatedFilterSet =
-      type === "title"
-        ? [changedFilter, filterValues[1]]
-        : [filterValues[0], changedFilter];
-    setFilterValues(updatedFilterSet);
-  };
-  
-  const movies = data ? data.results : [];
-  const displayedMovies = filterFunction(movies);
-
-  const favourites = movies.filter(m => m.favourite)
-  localStorage.setItem("favourites", JSON.stringify(favourites));
-
-  return (
-    <>
-    <PageTemplate
-      title='Upcoming Movies'
-      movies={displayedMovies}
-      action={(movie: BaseMovieProps) => {
-        return <AddToFavouritesIcon {...movie} />
-      }}
-    />
-    <MovieFilterUI
-        onFilterValuesChange={changeFilterValues}
-        titleFilter={filterValues[0].value}
-        genreFilter={filterValues[1].value}
-      />
-    </>
-    
-    
-  );
+  const [movies, setMovies] = useState<BaseMovieProps[]>([]);
+  useEffect(() => {
+    getUpcomingMovies().then((data) => {
+      setMovies(data.results); // :white_tick: Extract `results` from API response
+    });
+  }, []);
+  return <PageTemplate title="Upcoming Movies" movies={movies} action={(movie) => <span>{movie.title}</span>} />;
 };
 export default UpcomingMoviesPage;
