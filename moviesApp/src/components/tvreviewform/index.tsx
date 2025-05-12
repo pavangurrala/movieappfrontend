@@ -7,21 +7,21 @@ import Box from "@mui/material/Box";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { MoviesContext } from "../../contexts/moviesContext";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles";
-import ratings from "./ratingCategories";
-import { BaseMovieProps, Review } from "../../types/interfaces";
+import styles from "../reviewForm/styles";
+import ratings from "../reviewForm/ratingCategories";
+import { BaseTvProps, TvShowReview } from "../../types/interfaces";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 
-const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
+const tvReviewForm: React.FC<BaseTvProps> = (tvshow) => {
     const defaultValues = {
         defaultValues: {
           author: "",
           review: "",
           agree: false,
           rating: 3,
-          movieId: 0,
+          tvshowId: 0,
         }
       };
     
@@ -30,7 +30,7 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
         formState: { errors },
         handleSubmit,
         reset,
-      } = useForm<Review>(defaultValues);
+      } = useForm<TvShowReview>(defaultValues);
     
       const navigate = useNavigate();
       const context = useContext(MoviesContext);
@@ -42,16 +42,15 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
       };
       const handleSnackClose = () => {
         setOpen(true);
-        navigate("/movies/favourites");
+        navigate("/tv/favourites");
       };
-      const onSubmit: SubmitHandler<Review> = (review) => {
-        review.movieId = movie.id;
+      const onSubmit: SubmitHandler<TvShowReview> = (review) => {
+        review.tvShowId = tvshow.id;
         review.rating = rating;
-        review.moviename = movie.title;
-        context.addReview(movie, review);
+        review.tvShowname = tvshow.name;
+        context.addTvShowReview(tvshow, review);
         const reviews = JSON.parse(localStorage.getItem("reviews") || "[]" );
-        localStorage.setItem("moviereview", JSON.stringify([...reviews, review]))
-
+        localStorage.setItem("tvshowreview", JSON.stringify([...reviews, review]))
         setOpen(true); // NEW
         // console.log(review);
       };
@@ -184,4 +183,4 @@ const ReviewForm: React.FC<BaseMovieProps> = (movie) => {
     };
     
 
-export default ReviewForm;
+export default tvReviewForm;

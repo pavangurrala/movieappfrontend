@@ -8,9 +8,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Link } from "react-router-dom";
 //import { getMovieReviews } from "../../api/tmdb-api";
- import { getReviewsForMovie } from "../../util";
+ import { getReviewsForTVshow } from "../../util";
 
-import { MovieDetailsProps, Review } from "../../types/interfaces"; // Import the MovieT type from the appropriate location
+import { TvDetailsProps, TvShowReview } from "../../types/interfaces"; // Import the MovieT type from the appropriate location
 
 const styles = {
     table: {
@@ -18,13 +18,13 @@ const styles = {
     },
 };
 
-const MovieReviews: React.FC<MovieDetailsProps> = (movie) => { 
-    const [reviews, setReviews] = useState<Review[]>([]);
+const TVShowReviews: React.FC<TvDetailsProps> = (tvshow) => { 
+    const [reviews, setReviews] = useState<TvShowReview[]>([]);
 
     useEffect(() => {
-       setReviews(getReviewsForMovie(movie.id))
+       setReviews(getReviewsForTVshow(tvshow.id))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [movie.id]);
+    }, [tvshow.id]);
 
     return (
         <TableContainer component={Paper}>
@@ -45,11 +45,11 @@ const MovieReviews: React.FC<MovieDetailsProps> = (movie) => {
             </TableRow>
           ) : (
             reviews.map((r) => (
-              <TableRow key={r.id}>
+              <TableRow key={r.tvShowId}>
                 <TableCell>{r.author}</TableCell>
                 <TableCell>{r.content.slice(0, 400)}...</TableCell>
                 <TableCell>
-                  <Link to={`/reviews/${r.id}`} state={{ review: r, movie }}>
+                  <Link to={`/reviews/${r.tvShowId}`} state={{ review: r, tvshow }}>
                     Full Review
                   </Link>
                 </TableCell>
@@ -62,4 +62,4 @@ const MovieReviews: React.FC<MovieDetailsProps> = (movie) => {
     );
 }
 
-export default MovieReviews;
+export default TVShowReviews;

@@ -12,7 +12,7 @@ import Select from "@mui/material/Select";
 import React, { ChangeEvent } from "react";//update existing import
 import { FilterOption, GenreData  } from "../../types/interfaces"
 import { SelectChangeEvent } from "@mui/material";
-import { getGenres } from "../../api/tmdb-api";
+import { getTvGenres } from "../../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner';
 
@@ -28,16 +28,16 @@ const styles = {
     backgroundColor: "rgb(255, 255, 255)",
   },
 };
-interface FilterMoviesCardProps {
+interface FilterTVCardProps {
   onUserInput: (f: FilterOption, s: string)  => void; 
   titleFilter: string;
   genreFilter: string;
-  //sortOrder:string;
+  sortOrder:string;
 }
 
-  const FilterMoviesCard: React.FC<FilterMoviesCardProps>= ({ titleFilter, genreFilter, onUserInput }) => {
+  const FilterTVCard: React.FC<FilterTVCardProps>= ({ titleFilter, genreFilter, onUserInput, sortOrder }) => {
 
-    const { data, error, isLoading, isError } = useQuery<GenreData, Error>("genres", getGenres);
+    const { data, error, isLoading, isError } = useQuery<GenreData, Error>("genres", getTvGenres);
 
   if (isLoading) {
     return <Spinner />;
@@ -62,19 +62,21 @@ interface FilterMoviesCardProps {
   const handleGenreChange = (e: SelectChangeEvent) => {
     handleChange(e, "genre", e.target.value)
   };
-  
+  const handleSortOrderChange = (e: SelectChangeEvent) => {
+    handleChange(e, "sortOrder", e.target.value)
+  };
   return (
     <>
     <Card sx={styles.root} variant="outlined">
       <CardContent>
         <Typography variant="h5" component="h1">
           <FilterAltIcon fontSize="large" />
-          Filter the movies.
+          Filter the TV Shows.
         </Typography>
         <TextField
       sx={styles.formControl}
       id="filled-search"
-      label="Search field"
+      label="Search TV Show"
       type="search"
       value={titleFilter}
       variant="filled"
@@ -103,12 +105,19 @@ interface FilterMoviesCardProps {
         <CardContent>
           <Typography variant="h5" component="h1">
             <SortIcon fontSize="large" />
-            Sort the movies.
+            Sort the TV shows.
           </Typography>
+          <FormControl sx={styles.formControl}>
+          <InputLabel id="sort-order-label">Sort By</InputLabel>
+          <Select labelId="sort-order-label" id="sort-order-select" value={sortOrder} onChange={handleSortOrderChange}>
+            <MenuItem value="asc">Popularity Ascending</MenuItem>
+            <MenuItem value="desc">Popularity Descending</MenuItem>
+          </Select>
+        </FormControl>
         </CardContent>
       </Card>
       </>
   );
 }
 
-export default FilterMoviesCard;
+export default FilterTVCard;

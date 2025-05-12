@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { CognitoUserPool, CognitoUserAttribute  } from "amazon-cognito-identity-js";
 import {useAuth} from "../../contexts/authContext";
 const poolData = {
-    UserPoolId: "eu-west-1_gG71aMxyI", // 🔁 Replace with your Cognito User Pool ID
-    ClientId: "6kqjb8a941k4reptoambjhjc4s",      // 🔁 Replace with your App Client ID
+    UserPoolId: "eu-west-1_MJBqxzhDx", // 🔁 Replace with your Cognito User Pool ID
+    ClientId: "37593f7gir509vcsro2hhon7f",      // 🔁 Replace with your App Client ID
   };
   const userPool = new CognitoUserPool(poolData);
 

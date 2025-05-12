@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import FilterCard from "../filterMoviesCard";
+import FilterCard from "../FilterTVCard";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
-import { BaseMovieProps } from "../../types/interfaces";
+import { BaseTvProps } from "../../types/interfaces";
 
-export const titleFilter = (movie: BaseMovieProps, value: string): boolean => {
-    return movie.title.toLowerCase().search(value.toLowerCase()) !== -1;
+export const titleFilter = (tvshow: BaseTvProps, value: string): boolean => {
+    return tvshow.name.toLowerCase().search(value.toLowerCase()) !== -1;
 };
 
-export const genreFilter = (movie: BaseMovieProps, value: string) => {
+export const genreFilter = (tvshow: BaseTvProps, value: string) => {
     const genreId = Number(value);
-    const genreIds = movie.genre_ids;
+    const genreIds = tvshow.genre_ids;
     return genreId > 0 && genreIds ? genreIds.includes(genreId) : true;
 };
-// export const sortorder = (movie: BaseMovieProps, value: string) => {
-//     const genreId = value;
-//     const genreIds = movie.sortOrder;
-//     return genreId > 0 && genreIds ? genreIds.includes(genreId) : true;
-// };
+export const sortOrder = (tvshows: BaseTvProps[], sortOrder: string) => {
+    return [...tvshows].sort((a, b) => {
+        if (sortOrder === "asc") return a.popularity - b.popularity;
+        if (sortOrder === "desc") return b.popularity - a.popularity;
+        return 0;
+    });
+};
 
 const styles = {
     root: {
@@ -31,15 +33,16 @@ const styles = {
     },
 };
 
-interface MovieFilterUIProps {
+interface TvFilterUIProps {
     onFilterValuesChange: (f: string, s: string) => void;
     titleFilter: string;
     genreFilter: string;
+    sortOrder:string;
     
 }
 
 
-const MovieFilterUI: React.FC<MovieFilterUIProps> = ({ onFilterValuesChange, titleFilter, genreFilter }) => {
+const TvFilterUI: React.FC<TvFilterUIProps> = ({ onFilterValuesChange, titleFilter, genreFilter, sortOrder }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     return (
@@ -61,10 +64,11 @@ const MovieFilterUI: React.FC<MovieFilterUIProps> = ({ onFilterValuesChange, tit
                     onUserInput={onFilterValuesChange}
                     titleFilter={titleFilter}
                     genreFilter={genreFilter}
+                    sortOrder = {sortOrder}
                 />
             </Drawer>
         </>
     );
 };
 
-export default MovieFilterUI;
+export default TvFilterUI;

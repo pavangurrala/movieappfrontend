@@ -61,7 +61,7 @@ const ActorDetailsPage: React.FC=()=>{
                 <Pagination 
                 count={totalPages}
                 page={page}
-                onChange={(e,value)=>setPage(value)}
+                onChange={(_,value)=>setPage(value)}
                 color="primary"/>
             </Box>
           )}

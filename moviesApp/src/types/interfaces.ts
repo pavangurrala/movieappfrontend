@@ -15,6 +15,7 @@ export interface BaseMovieProps {
     revenue: number;
     vote_count: number;
     favourite?: boolean;
+    sortOrder:string;
     genre_ids?:number[]
   }
 
@@ -49,10 +50,55 @@ export interface BaseMovieProps {
     images: MovieImage[];
   }
 
-  export type FilterOption = "title" | "genre";
+  export type FilterOption = "title" | "genre" | "sortOrder";
 
   export interface MovieListPageTemplateProps extends BaseMovieListProps {
     title: string;
+  }
+
+  export interface BaseTvProps {
+    backdrop_path:string
+    first_air_date:string
+    homepage: string | undefined;
+    genre_ids?:number[]
+    id:number
+    name:string
+    origin_country?:[]
+    original_language:string
+    original_name:string
+    overview:string
+    popularity:number
+    poster_path?:string
+    vote_average:number
+    vote_count:number
+    tagline: string | undefined;
+  }
+  export interface BaseTVListProps {
+    tvshows : BaseTvProps[];
+    action: (m: BaseTvProps) => React.ReactNode;
+  }
+  export interface TvDetailsProps extends BaseTvProps{
+    genres:{
+        id:number;
+        name: string;
+    }[],
+  }
+  export interface TvListPageTemplateProps extends BaseTVListProps {
+    title: string;
+  }
+  export interface TvImage {
+    file_path: string;
+    aspect_ratio?: number; //some props are optional...
+    height?: number;
+    iso_639_1?: string;
+    vote_average?: number;
+    vote_count?: number;
+    width?: number;
+  }
+
+  export interface TvPageProps {
+    tvshow: TvDetailsProps;
+    images: TvImage[];
   }
 
   export interface Review{
@@ -80,6 +126,15 @@ export interface BaseMovieProps {
     agree: boolean,
     rating: number,
     movieId: number,
+    moviename:string,
+  }
+  export interface TvShowReview {
+    author: string,
+    content: string,
+    agree: boolean,
+    rating: number,
+    tvShowId: number,
+    tvShowname:string,
   }
 
   export interface PopularMovieStars {

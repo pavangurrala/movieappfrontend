@@ -22,7 +22,6 @@ const useFiltering = ( filters: Filter[]) => {
           return conditionFn(item, filterValues[index].value);
       });
     }, collection);
-
   return {
     filterValues,
     setFilterValues,

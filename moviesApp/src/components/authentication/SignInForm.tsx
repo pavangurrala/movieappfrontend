@@ -17,7 +17,7 @@ const SignInPage = () => {
 
     try {
       const response = await axios.post(
-        "https://5vkincjar5.execute-api.eu-west-1.amazonaws.com/prod/auth/signin",
+        "https://fg49as5fuf.execute-api.eu-west-1.amazonaws.com/prod/auth/signin",
         {
           username,
           password,
@@ -27,6 +27,7 @@ const SignInPage = () => {
       
         console.log("Sign-in successful:", response.data);
         localStorage.setItem("username", username);
+        localStorage.setItem("idToken", response.data.idToken);
         navigate("/"); // Navigate to home on successful login
       
       

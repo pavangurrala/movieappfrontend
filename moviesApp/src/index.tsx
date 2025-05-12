@@ -12,12 +12,16 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools';
 import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
+import AddTvShowReviewPage from './pages/addTvShowReviewPage';
 import AuthenticationPage from './pages/authPage'
 import ConfirmSignUpPage from './pages/ConfirmSignUpForm'
 import PopularMoviesPage from "./pages/popularMoviesPage";
 import { AuthProvider } from "./contexts/authContext";
 import PopularActorsPage from "./pages/popularActorsPage";
 import ActorDetailsPage from "./pages/actorDetailsPage";
+import PopularTvShowsPage from "./pages/popularTvShowsPage";
+import TvShowDetailsPage from "./pages/tvShowDetailsPage";
+import FavouriteTvShowPage from "./pages/favouriteTvShowsPage";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 const queryClient = new QueryClient({
@@ -42,11 +46,15 @@ const App = () => {
                     <Route path="/confirm-signup" element={<ConfirmSignUpPage />} />
                     <Route path="/movies/:id" element={<MoviePage />} />
                     <Route path="/movies/favourites" element={<FavouriteMoviesPage />} />
+                    <Route path="/tv/favourites" element={<FavouriteTvShowPage />} />
                     <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
                     <Route path="/movies/popular" element={<PopularMoviesPage />} />
+                    <Route path="/tv/popular" element={<PopularTvShowsPage />} />
+                    <Route path="/tv/:id" element={<TvShowDetailsPage />} />
                     <Route path="/person/popular" element={<PopularActorsPage />} />
                     <Route path="/reviews/:id" element={<MovieReviewPage/>} />
                     <Route path="/reviews/form" element={<AddMovieReviewPage/>} />
+                    <Route path="/reviews/tvshowform" element={<AddTvShowReviewPage/>}/>
                     <Route path="/actor/:id" element={<ActorDetailsPage/>} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

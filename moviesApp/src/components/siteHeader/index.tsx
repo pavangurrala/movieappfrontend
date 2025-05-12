@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent} from "react";
+import React, { useState, MouseEvent } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -12,23 +12,28 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {useAuth } from "../../contexts/authContext"
+import { useAuth } from "../../contexts/authContext";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 const styles = {
-    title: {
-      flexGrow: 1,
-    },
-  };
+  title: {
+    flexGrow: 1,
+  },
+};
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 const SiteHeader: React.FC = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement|null>(null);
-  const open = Boolean(anchorEl);
+  const [anchorElPopular, setAnchorElPopular] = useState<null | HTMLElement>(null);
+  const [anchorElFavourite, setanchorElFavourite] = useState<null | HTMLElement>(null);
+  const [anchorElMobile, setAnchorElMobile] = useState<HTMLButtonElement | null>(null);
+  const openPopular = Boolean(anchorElPopular);
+  const openMobile = Boolean(anchorElMobile);
+  const openFavourite = Boolean(anchorElFavourite);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-  const {username, setUsername, setEmailId, logout} = useAuth();
-  //const { username, setUsername, setEmailId } = useContext(AuthProvider);
+
+  const { username, setUsername, setEmailId, logout } = useAuth();
   const isLoggedIn = !!username;
 
   const handleLogout = () => {
@@ -37,21 +42,23 @@ const SiteHeader: React.FC = () => {
     logout();
     navigate("/authPage");
   };
-  const menuOptions = [
-    { label: "Home", path: "/" },
-    { label: "Upcoming", path: "/movies/upcoming" },
-    { label: "Favorites", path: "/movies/favourites" },
-    { label: "Popular Movies", path: "/movies/popular" },
-    { label: "Popular Actors", path: "/person/popular" },
-  ];
 
   const handleMenuSelect = (pageURL: string) => {
     navigate(pageURL);
-    setAnchorEl(null);
+    setAnchorElPopular(null);
+    setAnchorElMobile(null);
+    setanchorElFavourite(null);
   };
 
-  const handleMenu = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleMobileMenu = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorElMobile(event.currentTarget);
+  };
+
+  const handlePopularMenu = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorElPopular(event.currentTarget);
+  };
+  const handleFavouriteMenu = (event: MouseEvent<HTMLButtonElement>) => {
+    setanchorElFavourite(event.currentTarget);
   };
 
   return (
@@ -59,18 +66,19 @@ const SiteHeader: React.FC = () => {
       <AppBar position="fixed" elevation={0} color="primary">
         <Toolbar>
           <Typography variant="h4" sx={styles.title}>
-            TMDB Client
+            MoviesNow
           </Typography>
           <Typography variant="h6" sx={styles.title}>
             All you ever wanted to know about Movies!
           </Typography>
+
           {isMobile ? (
             <>
               <IconButton
                 aria-label="menu"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                onClick={handleMobileMenu}
                 color="inherit"
                 size="large"
               >
@@ -78,7 +86,7 @@ const SiteHeader: React.FC = () => {
               </IconButton>
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
+                anchorEl={anchorElMobile}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "right",
@@ -88,17 +96,15 @@ const SiteHeader: React.FC = () => {
                   vertical: "top",
                   horizontal: "right",
                 }}
-                open={open}
-                onClose={() => setAnchorEl(null)}
+                open={openMobile}
+                onClose={() => setAnchorElMobile(null)}
               >
-                {menuOptions.map((opt) => (
-                  <MenuItem
-                    key={opt.label}
-                    onClick={() => handleMenuSelect(opt.path)}
-                  >
-                    {opt.label}
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={() => handleMenuSelect("/")}>Home</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/movies/upcoming")}>Upcoming</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/movies/popular")}>Popular Movies</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/tv/popular")}>Popular Tv Shows</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/person/popular")}>Popular Actors</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/movies/favourites")}>Favourites</MenuItem>
                 {isLoggedIn ? (
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 ) : (
@@ -108,15 +114,66 @@ const SiteHeader: React.FC = () => {
             </>
           ) : (
             <>
-              {menuOptions.map((opt) => (
-                <Button
-                  key={opt.label}
-                  color="inherit"
-                  onClick={() => handleMenuSelect(opt.path)}
-                >
-                  {opt.label}
-                </Button>
-              ))}
+              <Button color="inherit" onClick={() => handleMenuSelect("/")}>
+                Home
+              </Button>
+              <Button color="inherit" onClick={() => handleMenuSelect("/movies/upcoming")}>
+                Upcoming
+              </Button>
+
+              {/* Popular Dropdown */}
+              <Button color="inherit" 
+              aria-haspopup="true"
+              aria-controls="popular-menu"
+              endIcon={<ArrowDropDownIcon />}
+              onClick={handlePopularMenu}>
+                Popular
+              </Button>
+              <Menu
+                anchorEl={anchorElPopular}
+                open={openPopular}
+                onClose={() => setAnchorElPopular(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                transformOrigin={{ vertical: "top", horizontal: "left" }}
+              >
+                <MenuItem onClick={() => handleMenuSelect("/movies/popular")}>
+                  Popular Movies
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/tv/popular")}>
+                  Popular TV Shows
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/person/popular")}>
+                  Popular Actors
+                </MenuItem>
+              </Menu>
+
+              {/* Favourites as direct button */}
+              {/* <Button color="inherit" onClick={() => handleMenuSelect("/movies/favourites")}>
+                Favourites
+              </Button> */}
+              <Button color="inherit"
+              aria-haspopup="true"
+              aria-controls="popular-menu"
+              endIcon={<ArrowDropDownIcon />}
+              onClick={handleFavouriteMenu}
+              >
+                Favourites
+              </Button>
+              <Menu
+              anchorEl={anchorElFavourite}
+              open={openFavourite}
+              onClose={()=>setanchorElFavourite(null)}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              >
+                <MenuItem onClick={() => handleMenuSelect("/movies/favourites")}>
+                  Favourite Movies
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuSelect("/tv/favourites")}>
+                  Favourite TV Shows
+                </MenuItem>
+              </Menu>
+
               {isLoggedIn ? (
                 <>
                   <Typography variant="subtitle1" sx={{ mx: 2 }}>
